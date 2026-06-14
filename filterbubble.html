@@ -11,8 +11,8 @@
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#0b0f19',
-                        panelBg: '#131c31',
+                        darkBg: '#080c14',
+                        panelBg: '#11192e',
                         accentA: '#10B981', // 환경보호 (에메랄드 그린)
                         accentB: '#3B82F6', // 산업개발 (네온 블루)
                         warningRed: '#EF4444' // 경고 (레드)
@@ -24,22 +24,22 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* 부드러운 스크롤 효과 및 스크롤바 커스텀 */
+        /* 스크롤바 세련되게 커스텀 */
         ::-webkit-scrollbar {
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0b0f19;
+            background: #080c14;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1f2937;
+            background: #1e293b;
             border-radius: 3px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #374151;
+            background: #334155;
         }
         
-        /* 카드 등장 애니메이션 */
+        /* 카드 생성 페이드인 애니메이션 */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -54,708 +54,902 @@
             animation: fadeInUp 0.5s ease forwards;
         }
 
-        /* 게이지 회전 애니메이션용 트랜지션 */
+        /* 편향도 원형 게이지 스무스 트랜지션 */
         .gauge-clip {
             transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
-<body class="bg-darkBg text-gray-100 min-h-screen font-sans flex flex-col antialiased selection:bg-blue-500/30">
+<body class="bg-darkBg text-gray-100 min-h-screen font-sans flex flex-col antialiased selection:bg-blue-500/30 pb-12">
 
-    <!-- 상단 헤더 영역 -->
-    <header class="border-b border-gray-800 bg-darkBg/80 backdrop-blur sticky top-0 z-40 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="p-2 bg-gradient-to-tr from-emerald-500 to-blue-500 rounded-xl shadow-lg shadow-blue-500/20">
-                    <i data-lucide="layers" class="w-6 h-6 text-white"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold tracking-tight bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
-                        EchoChamber.ai
-                    </h1>
-                    <p class="text-xs text-gray-400">알고리즘 추천 시스템 편향성 시뮬레이터</p>
+    <!-- ================= [1] 인트로 화면 (시뮬레이터 의의 및 교육 목적) ================= -->
+    <div id="intro-page" class="fixed inset-0 bg-darkBg z-50 flex flex-col items-center justify-center p-4 overflow-y-auto">
+        <!-- 배경 화려한 구형 글래머러스 네온 광원 데코레이션 -->
+        <div class="absolute w-[450px] h-[450px] bg-blue-500/10 rounded-full blur-3xl -top-32 -left-32 pointer-events-none"></div>
+        <div class="absolute w-[450px] h-[450px] bg-emerald-500/10 rounded-full blur-3xl -bottom-32 -right-32 pointer-events-none"></div>
+
+        <div class="max-w-2xl w-full text-center space-y-8 animate-fade-in">
+            <div class="inline-flex p-4 bg-gradient-to-tr from-emerald-500 to-blue-500 rounded-3xl shadow-2xl shadow-blue-500/10 mb-2">
+                <i data-lucide="layers" class="w-12 h-12 text-white"></i>
+            </div>
+            
+            <div class="space-y-3">
+                <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-400 via-purple-400 to-blue-400 bg-clip-text text-transparent sm:text-5xl">
+                    EchoChamber.ai
+                </h1>
+                <p class="text-sm sm:text-base text-gray-400 font-medium max-w-lg mx-auto leading-relaxed">
+                    빅테크 기업의 추천 알고리즘이 유도하는 필터 버블과 확증 편향의 메커니즘을 시각화하고 비판적으로 분석하는 시뮬레이터입니다.
+                </p>
+            </div>
+
+            <!-- 시뮬레이터 연구 목적 안내 패널 -->
+            <div class="bg-panelBg/60 border border-gray-800 rounded-2xl p-6 text-left space-y-4 backdrop-blur-md">
+                <h2 class="text-sm font-bold text-gray-200 flex items-center">
+                    <i data-lucide="info" class="w-4 h-4 text-blue-400 mr-2"></i>
+                    학습 알고리즘 설계 및 가중치 수식
+                </h2>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    네트워크 지연이 없는 완전 오프라인 임베디드 리터러시 알고리즘이 기동되어, 사용자의 반응 강도에 따라 추천 피드의 오염 속도를 정확히 연산합니다.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-[11px] text-gray-300">
+                    <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800">
+                        <span class="text-emerald-400 font-bold block mb-1">❤️ 좋아요 토글 (편향 증폭)</span>
+                        알고리즘 편중 가중치 <span class="text-emerald-400 font-bold">+2.0</span>을 강력하게 부여합니다. 다시 클릭해 취소하면 게이지와 차트에서 즉시 감산 복구됩니다.
+                    </div>
+                    <div class="bg-gray-900/50 p-3 rounded-xl border border-gray-800">
+                        <span class="text-blue-400 font-bold block mb-1">✨ 교차 프레임 분석 (미디어 리터러시)</span>
+                        중복 학습 없이 기사당 <span class="text-blue-400 font-bold">최초 1회만</span> 완화 가중치가 적용되며, 상충되는 양 진영의 관점을 통합적으로 분석하는 고출력 상세 보고서를 출력합니다.
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center space-x-4">
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-300 border border-gray-700">
-                    <span class="w-2 h-2 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    실시간 시뮬레이션 활성화
+
+            <button onclick="startSimulator()" class="inline-flex items-center space-x-2 bg-gradient-to-r from-emerald-500 to-blue-500 hover:from-emerald-400 hover:to-blue-400 text-white font-bold px-10 py-4 rounded-xl shadow-lg transition transform hover:-translate-y-0.5">
+                <span>시뮬레이터 가동하기</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </div>
+
+
+    <!-- ================= [2] 메인 시뮬레이션 서비스 레이아웃 ================= -->
+    <!-- 헤더 -->
+    <header class="border-b border-gray-800 bg-darkBg/85 backdrop-blur sticky top-0 z-40 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-gradient-to-tr from-emerald-500 to-blue-500 rounded-xl shadow-md">
+                    <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-bold tracking-tight text-white flex items-center">
+                        EchoChamber.ai <span class="text-[10px] font-normal text-gray-400 ml-2 border border-gray-800 px-1.5 py-0.5 rounded">v3.0 Local Edition</span>
+                    </h1>
+                    <p class="text-[10px] text-gray-500">오프라인 임베디드 리터러시 분석기</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <span id="api-status-badge" class="hidden sm:inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/40 text-emerald-400 border border-emerald-500/20">
+                    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
+                    로컬 리터러시 엔진 가동 중
                 </span>
-                <button onclick="resetSimulator()" class="flex items-center space-x-1 text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-gray-600 px-3 py-1.5 rounded-lg transition-all duration-200 text-gray-300">
+                <button onclick="resetSimulator()" class="flex items-center space-x-1 text-xs bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg transition text-gray-300">
                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-                    <span>초기화</span>
+                    <span>리셋</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- 메인 대시보드 및 피드 레이아웃 -->
+    <!-- 메인 레이아웃 본문 프레임 -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         <!-- 왼쪽: 가상 SNS 피드 영역 (2개 컬럼 차지) -->
         <section class="lg:col-span-2 flex flex-col space-y-4">
-            <div class="flex items-center justify-between bg-panelBg/50 border border-gray-800/80 p-4 rounded-xl">
+            <div class="flex items-center justify-between bg-panelBg/30 border border-gray-800 p-4 rounded-xl">
                 <div class="flex items-center space-x-2">
-                    <i data-lucide="smartphone" class="w-5 h-5 text-blue-400"></i>
-                    <h2 class="font-semibold text-gray-200">개미타임즈 (AntTimes) 피드</h2>
+                    <i data-lucide="smartphone" class="w-4 h-4 text-blue-400"></i>
+                    <h2 class="font-bold text-xs text-gray-200">가상 피드 타임라인 (AntTimes)</h2>
                 </div>
-                <p class="text-xs text-gray-400">
-                    스크롤을 내리거나 포스트를 클릭하면 알고리즘이 당신의 취향을 실시간 학습합니다.
-                </p>
+                <span id="activity-counter" class="text-[10px] font-black text-blue-400 bg-blue-500/10 border border-blue-500/20 px-2.5 py-1 rounded-full">
+                    데이터 수집 로그: 0회 수집됨
+                </span>
             </div>
 
-            <!-- 스크롤 가능한 가상 SNS 타임라인 -->
-            <div id="feed-container" class="space-y-4 max-h-[75vh] overflow-y-auto pr-2 rounded-xl">
-                <!-- 자바스크립트에 의해 동적으로 포스트 카드가 생성됩니다. -->
-            </div>
-
-            <!-- 하단 무한 스크롤 및 포스트 수동 불러오기 트리거 -->
-            <div class="flex justify-center py-2">
-                <button onclick="loadMorePosts(3)" class="flex items-center space-x-2 bg-gradient-to-r from-gray-800 to-gray-900 border border-gray-700/80 hover:border-gray-600 hover:from-gray-700 hover:to-gray-800 text-sm text-gray-300 px-6 py-3 rounded-xl shadow-md transition-all duration-300 w-full justify-center">
-                    <i data-lucide="arrow-down-circle" class="w-4 h-4 animate-bounce"></i>
-                    <span>피드 더 불러오기 (스크롤 시에도 자동 생성)</span>
-                </button>
+            <!-- 무한 스크롤 피드 주입용 컨테이너 -->
+            <div id="feed-container" class="space-y-4 max-h-[72vh] overflow-y-auto pr-2 rounded-xl">
+                <!-- 동적으로 피드 카드 삽입 -->
             </div>
         </section>
 
-        <!-- 오른쪽: 실시간 알고리즘 대시보드 영역 (1개 컬럼 차지) -->
+        <!-- 오른쪽: 실시간 대시보드 영역 (1개 컬럼 차지) -->
         <section class="space-y-6 lg:sticky lg:top-24 h-fit">
             
-            <!-- 1. 알고리즘 편향성 원형 게이지 -->
-            <div class="bg-panelBg/40 border border-gray-800/60 rounded-2xl p-6 backdrop-blur flex flex-col items-center text-center">
-                <div class="flex items-center space-x-2 w-full justify-start border-b border-gray-800 pb-3 mb-4">
-                    <i data-lucide="gauge" class="w-4 h-4 text-rose-500"></i>
-                    <h3 class="font-semibold text-sm text-gray-200">추천 알고리즘 편향성 (Bias Index)</h3>
+            <!-- [대시보드 잠금 블록창] 행동 합계 3회 미만 시 노출 -->
+            <div id="dashboard-locked" class="bg-panelBg/40 border border-gray-800 rounded-2xl p-8 text-center backdrop-blur flex flex-col items-center justify-center min-h-[350px]">
+                <div class="p-3 bg-gray-800/80 border border-gray-700 rounded-xl mb-4 text-gray-500">
+                    <i data-lucide="lock" class="w-6 h-6 animate-pulse text-blue-400"></i>
                 </div>
-
-                <!-- 원형 게이지 그래픽 -->
-                <div class="relative w-40 h-40 my-3 flex items-center justify-center">
-                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                        <!-- 배경 원 -->
-                        <circle cx="50" cy="50" r="40" stroke="#1f2937" stroke-width="8" fill="transparent" />
-                        <!-- 진행 게이지 원 -->
-                        <circle id="gauge-circle" class="gauge-clip" cx="50" cy="50" r="40" stroke="url(#gradient)" stroke-width="8" fill="transparent"
-                                stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" />
-                        
-                        <!-- 그라데이션 정의 -->
-                        <defs>
-                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" stop-color="#3B82F6" />
-                                <stop offset="50%" stop-color="#8B5CF6" />
-                                <stop offset="100%" stop-color="#EF4444" />
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                    <div class="absolute flex flex-col items-center justify-center">
-                        <span id="bias-value" class="text-3xl font-extrabold tracking-tight text-white">0%</span>
-                        <span id="bias-level-text" class="text-[10px] font-bold uppercase tracking-wider text-gray-400 mt-1 px-2 py-0.5 bg-gray-800/80 rounded-full">중립</span>
-                    </div>
-                </div>
-
-                <p id="bias-desc" class="text-xs text-gray-400 mt-2 leading-relaxed">
-                    포스트에 좋아요를 눌러보세요. 알고리즘이 당신의 가치관을 한쪽 방향으로 수집하기 시작합니다.
+                <h3 class="text-sm font-bold text-gray-200">데이터 대시보드 비활성화</h3>
+                <p class="text-xs text-gray-400 mt-2 max-w-[200px] mx-auto leading-relaxed">
+                    피드의 기사들에 <span class="text-emerald-400 font-bold">좋아요</span> 또는 <span class="text-blue-400 font-bold">교차 프레임 분석</span>을 누적 <span class="text-rose-400 font-bold" id="lock-remain">3</span>회 실행하면 분석 장치가 가동됩니다.
                 </p>
             </div>
 
-            <!-- 2. 성향 분배도 차트 (A성향 vs B성향) -->
-            <div class="bg-panelBg/40 border border-gray-800/60 rounded-2xl p-6 backdrop-blur-md">
-                <div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
-                    <div class="flex items-center space-x-2">
-                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400"></i>
-                        <h3 class="font-semibold text-sm text-gray-200">성향 분석 데이터 수치</h3>
-                    </div>
-                    <span id="total-clicks" class="text-[11px] text-gray-400">관심 로그: 0회</span>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- A 성향 (환경 보호론) -->
-                    <div>
-                        <div class="flex justify-between text-xs font-semibold mb-1">
-                            <span class="text-accentA flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-accentA mr-1.5"></span>환경 보호론</span>
-                            <span id="percent-A" class="text-gray-300">50%</span>
-                        </div>
-                        <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
-                            <div id="bar-A" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500" style="width: 50%"></div>
-                        </div>
-                        <p class="text-[10px] text-gray-500 mt-1" id="clicks-A">좋아요 0회 수집됨</p>
+            <!-- [대시보드 실제 화면] 행동 합계 3회 이상 시 표시 -->
+            <div id="dashboard-unlocked" class="hidden space-y-6">
+                
+                <!-- 1. 알고리즘 편향성 원형 게이지 -->
+                <div class="bg-panelBg/40 border border-gray-800/60 rounded-2xl p-6 backdrop-blur flex flex-col items-center text-center">
+                    <div class="flex items-center space-x-2 w-full justify-start border-b border-gray-800/80 pb-3 mb-4">
+                        <i data-lucide="gauge" class="w-4 h-4 text-rose-500"></i>
+                        <h3 class="font-semibold text-xs text-gray-200">복합 추천 편향성 지수 (Bias Index)</h3>
                     </div>
 
-                    <!-- B 성향 (산업 개발론) -->
-                    <div>
-                        <div class="flex justify-between text-xs font-semibold mb-1">
-                            <span class="text-accentB flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-accentB mr-1.5"></span>산업 개발론</span>
-                            <span id="percent-B" class="text-gray-300">50%</span>
+                    <div class="relative w-36 h-36 my-2 flex items-center justify-center">
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="40" stroke="#1f2937" stroke-width="8" fill="transparent" />
+                            <circle id="gauge-circle" class="gauge-clip" cx="50" cy="50" r="40" stroke="url(#gradient)" stroke-width="8" fill="transparent"
+                                    stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round" />
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#3B82F6" />
+                                    <stop offset="50%" stop-color="#8B5CF6" />
+                                    <stop offset="100%" stop-color="#EF4444" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <div class="absolute flex flex-col items-center justify-center">
+                            <span id="bias-value" class="text-2xl font-black text-white">0%</span>
+                            <span id="bias-level-text" class="text-[9px] font-bold mt-1 px-2 py-0.5 bg-gray-800 rounded-full text-gray-400">데이터 수집 중</span>
                         </div>
-                        <div class="w-full bg-gray-800 rounded-full h-3 overflow-hidden">
-                            <div id="bar-B" class="bg-gradient-to-r from-blue-500 to-indigo-400 h-full rounded-full transition-all duration-500" style="width: 50%"></div>
+                    </div>
+                    <p id="bias-desc" class="text-[11px] text-gray-400 mt-2 leading-relaxed">데이터 연산 중...</p>
+                </div>
+
+                <!-- 2. ✨ AI 미디어 디톡스 맞춤 칼럼 처방 -->
+                <div class="bg-panelBg/40 border-2 border-emerald-500/20 rounded-2xl p-6 backdrop-blur shadow-lg shadow-emerald-500/5">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
+                            <h3 class="font-semibold text-xs text-gray-200">✨ 미디어 밸런스 처방 칼럼</h3>
                         </div>
-                        <p class="text-[10px] text-gray-500 mt-1" id="clicks-B">좋아요 0회 수집됨</p>
+                    </div>
+                    <p id="detox-score-info" class="text-[11px] text-gray-400 mb-4 leading-relaxed">
+                        실시간으로 누적된 미디어 편향 비율을 분석하여 편향을 파훼하는 사설 논조의 맞춤형 에세이 보고서를 빌드합니다.
+                    </p>
+                    <div id="ai-detox-placeholder">
+                        <button id="ai-detox-btn" onclick="generateDetoxReport()" class="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-500 to-blue-500 hover:opacity-90 text-white font-bold text-xs py-3 px-4 rounded-xl border border-emerald-400/20 transition-all duration-300 shadow-md shadow-emerald-500/10">
+                            <i data-lucide="sparkles" class="w-4 h-4"></i>
+                            <span>✨ 맞춤형 리밸런싱 사설 발급받기</span>
+                        </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- 3. 실시간 알고리즘 큐레이션 이력 스트림 (Feed Exposure History) -->
-            <div class="bg-panelBg/40 border border-gray-800/60 rounded-2xl p-6 backdrop-blur">
-                <div class="flex items-center space-x-2 border-b border-gray-800 pb-3 mb-4">
-                    <i data-lucide="eye" class="w-4 h-4 text-purple-400"></i>
-                    <h3 class="font-semibold text-sm text-gray-200">최근 노출된 피드 스트림</h3>
+                <!-- 3. 실시간 성향 분배도 차트 -->
+                <div class="bg-panelBg/40 border border-gray-800 rounded-2xl p-6 backdrop-blur">
+                    <div class="flex items-center justify-between border-b border-gray-800/80 pb-3 mb-4">
+                        <h3 class="font-semibold text-xs text-gray-200 flex items-center">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400 mr-1.5"></i>
+                            실시간 누적 성향 차트
+                        </h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-accentA">환경 보호론 성향</span>
+                                <span id="percent-A">50%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
+                                <div id="bar-A" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full transition-all duration-500" style="width: 50%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-accentB">산업 개발론 성향</span>
+                                <span id="percent-B">50%</span>
+                            </div>
+                            <div class="w-full bg-gray-800 rounded-full h-2.5 overflow-hidden">
+                                <div id="bar-B" class="bg-gradient-to-r from-blue-500 to-indigo-400 h-full transition-all duration-500" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-xs text-gray-400 mb-3 leading-relaxed">
-                    알고리즘에 의해 사용자의 화면에 투입된 최근 20개 포스트의 구성 비율입니다:
-                </p>
-                <!-- 타임라인 스트림 도트 배치함수 -->
-                <div id="stream-container" class="flex flex-wrap gap-2 p-2.5 bg-gray-900/60 rounded-xl min-h-[50px] border border-gray-800">
-                    <span class="text-xs text-gray-500 m-auto text-center">피드 생성 이력이 아직 없습니다.</span>
+
+                <!-- 4. 피드 노출 스트림 (행동 합계 5회 이상 시 표출) -->
+                <div class="bg-panelBg/40 border border-gray-800 rounded-2xl p-6 backdrop-blur">
+                    <div class="flex items-center space-x-2 border-b border-gray-800/85 pb-3 mb-4">
+                        <i data-lucide="eye" class="w-4 h-4 text-purple-400"></i>
+                        <h3 class="font-semibold text-xs text-gray-200">최근 노출된 피드 스트림</h3>
+                    </div>
+                    <!-- 잠금 레이어 -->
+                    <div id="stream-lock-layer" class="text-center py-4 text-xs text-gray-500">
+                        <i data-lucide="lock" class="w-4 h-4 mx-auto mb-1 opacity-40"></i>
+                        총 로그 5회 도달 시 스트림 이력 추적 장치 오픈
+                    </div>
+                    <!-- 실제 스트림 도트 렌더러 -->
+                    <div id="stream-actual-layer" class="hidden flex flex-wrap gap-2 p-2 bg-gray-900/60 rounded-xl min-h-[44px]">
+                        <!-- 점들 동적 생성 -->
+                    </div>
                 </div>
-                <div class="flex justify-between text-[10px] text-gray-500 mt-2 px-1">
-                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-accentA mr-1"></span>환경 보호</span>
-                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-accentB mr-1"></span>산업 개발</span>
-                    <span class="flex items-center"><span class="w-2 h-2 rounded-full bg-gray-500 mr-1"></span>중립 포스트</span>
-                </div>
+
             </div>
 
         </section>
     </main>
 
-    <!-- 푸터 -->
-    <footer class="border-t border-gray-800 bg-darkBg/30 py-6 px-6 mt-12 text-center">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 space-y-3 md:space-y-0">
-            <p>© 2026 Highschool Club Project - 알고리즘 편향 시뮬레이션 연구</p>
-            <p>본 사이트는 순수 자바스크립트 가중치 수학 계산으로만 동작하며 데이터를 외부에 수집하지 않습니다.</p>
-        </div>
-    </footer>
-
-    <!-- 필터 버블 경고 창 (우측 하단 슬라이드인 토스트 카드) -->
-    <div id="warning-container" class="fixed bottom-6 right-6 z-50 max-w-sm w-full bg-panelBg/95 backdrop-blur-md border border-rose-500/50 rounded-2xl p-5 shadow-2xl shadow-rose-500/30 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300">
-        <!-- 백그라운드 붉은 그라데이션 글로우 효과 -->
-        <div class="absolute -top-12 -left-12 w-24 h-24 bg-rose-500/10 rounded-full blur-2xl pointer-events-none"></div>
-        
+    <!-- ================= [3] 우측 하단 유동식 경고 알림창 ================= -->
+    <div id="slide-warning" class="fixed bottom-14 right-6 z-50 max-w-sm w-full bg-panelBg/95 backdrop-blur border border-rose-500/50 rounded-2xl p-5 shadow-2xl shadow-rose-500/20 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300">
         <div class="flex flex-col relative">
-            <!-- 닫기 버튼 -->
-            <button onclick="closeWarning()" class="absolute -top-2 -right-2 text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition">
+            <button onclick="closeWarning()" class="absolute -top-1 -right-1 text-gray-500 hover:text-white p-1 rounded-lg">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </button>
-
-            <div class="flex items-start space-x-3 mt-1">
-                <div class="p-2.5 bg-rose-500/10 border border-rose-500/30 rounded-xl text-rose-500">
-                    <i data-lucide="alert-octagon" class="w-6 h-6"></i>
+            <div class="flex items-start space-x-3">
+                <div class="p-2.5 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500">
+                    <i data-lucide="alert-octagon" class="w-5 h-5 animate-pulse"></i>
                 </div>
-                <div class="flex-1">
-                    <h3 class="text-base font-bold text-white tracking-tight">
-                        필터 버블 발생 감지!
-                    </h3>
-                    <span class="inline-block px-2 py-0.5 mt-1 rounded text-[10px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">
-                        편향도 <span id="warning-bias-score">70</span>% 돌파
-                    </span>
+                <div>
+                    <h3 class="text-sm font-bold text-white">필터 버블 경고!</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">당신의 타임라인 편향도가 <span class="text-rose-400 font-bold animate-pulse" id="warn-score">0</span>%에 도달했습니다.</p>
                 </div>
             </div>
-
-            <p class="text-xs text-gray-300 mt-3 leading-relaxed">
-                타임라인이 특정 주제에 갇혔습니다! 추천 알고리즘이 당신의 행동 데이터를 근거로 <strong class="text-emerald-400" id="bubble-target-name">특정 성향</strong>의 글만 선별해 흘려보내며 다른 시각을 인위적으로 가리고 있습니다.
+            <p class="text-[11px] text-gray-300 mt-3 leading-relaxed">
+                주의: 추천 알고리즘이 당신의 행동 로그를 학습해 반대 진영의 유용한 관점을 완전히 차단하고 있습니다. 현재 타임라인이 심각한 확증 편향 하우징에 갇혔습니다.
             </p>
-
-            <!-- 수치 리셋 및 억제 버튼들 -->
-            <div class="flex gap-2 mt-4">
-                <button onclick="burstBubbleAndContinue()" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-md transition-all duration-200">
-                    알고리즘 분쇄 (포스트 혼합)
-                </button>
-                <button onclick="resetSimulator()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-xs py-2 px-3 rounded-lg border border-gray-700 transition-all duration-200">
-                    초기화
-                </button>
-            </div>
+            <button onclick="burstBubble()" class="w-full mt-4 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-lg">
+                알고리즘 붕괴 (포스트 강제 혼합)
+            </button>
         </div>
     </div>
 
-    <!-- 스크립트 단독 핵심 로직 구현 -->
+    <!-- ✨ 교차 프레임 분석 모달 창 -->
+    <div id="ai-modal" class="fixed inset-0 bg-darkBg/95 backdrop-blur-md z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-panelBg border border-gray-800 rounded-3xl p-6 max-w-lg w-full transform scale-95 transition-all duration-300">
+            <div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-4">
+                <div class="flex items-center space-x-2 text-emerald-400">
+                    <i data-lucide="sparkles" class="w-5 h-5 animate-pulse"></i>
+                    <h3 class="font-bold text-sm text-white">✨ 심층 교차 프레임 분석</h3>
+                </div>
+                <button onclick="closeAIModal()" class="text-gray-500 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <!-- 리포트 출력 구역 -->
+            <div id="ai-modal-content" class="text-xs text-gray-300 leading-relaxed max-h-[55vh] overflow-y-auto space-y-4 pr-1">
+                <!-- 텍스트/데이터 배치 -->
+            </div>
+            <button onclick="closeAIModal()" class="w-full mt-5 bg-gray-800 hover:bg-gray-700 text-gray-200 font-bold text-xs py-2.5 rounded-xl border border-gray-700 transition">
+                학습 계속하기
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= [4] 작동 안내 고정 바 ================= -->
+    <div id="ai-disclaimer-bar" class="fixed bottom-0 left-0 right-0 z-40 bg-gray-950/90 border-t border-gray-800/80 text-center py-2 px-4 text-[10px] text-gray-400 backdrop-blur-sm shadow-xl flex items-center justify-center gap-2">
+        <div class="flex items-center justify-center gap-2 max-w-7xl w-full flex-wrap">
+            <span id="disclaimer-status-indicator" class="inline-flex items-center font-bold px-2 py-0.5 rounded bg-emerald-950/50 text-emerald-400 border border-emerald-800/60">
+                <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                로컬 미디어 분석 모델 작동 중 (API 통신 없음)
+            </span>
+            <span class="text-gray-500">|</span>
+            <span class="flex items-center gap-1.5 leading-relaxed">
+                <i data-lucide="info" class="w-3.5 h-3.5 text-emerald-500 inline-block"></i>
+                추천 알고리즘의 확증 편향과 필터 버블 메커니즘을 증명하기 위한 <strong>공학 및 사회학 융합형 포트폴리오</strong>입니다.
+            </span>
+        </div>
+    </div>
+
+
+    <!-- 스크립트 핵심 시뮬레이션 알고리즘 -->
     <script>
-        // === 1. 더미 뉴스 데이터 정의 (각 성향별 7개씩 설계) ===
-        // Topic A: 환경 보호론 (Environmental Protection)
+        // === 1. 수집 가설 데이터 원문 풀 정의 ===
         const postsA = [
-            {
-                id: 'A1',
-                type: 'A',
-                title: "기후 위기 임계점 돌파... 당장 행동하지 않으면 미래는 없다",
-                content: "UN 보고서에 따르면 해수면 상승 속도가 예상을 훨씬 상회하고 있습니다. 일회용 플라스틱 규제 강화를 촉구하는 목소리가 전 세계적으로 커지고 있습니다.",
-                author: "기후행동 네트워크",
-                time: "방금 전"
-            },
-            {
-                id: 'A2',
-                type: 'A',
-                title: "친환경 탄소배출 제로 달성한 유럽 '그린시티'의 기적",
-                content: "도시 전체 소비 에너지의 100%를 풍력과 태양광으로 조달하는 덴마크의 어느 마을을 집중 취재했습니다. 친환경 정책이 새로운 먹거리를 만듭니다.",
-                author: "에코글로벌 저널",
-                time: "10분 전"
-            },
-            {
-                id: 'A3',
-                type: 'A',
-                title: "글로벌 대기업들의 위장 환경주의 '그린워싱' 심층 고발",
-                content: "친환경 라벨만 붙인 채 실제 석유 수입량을 늘린 기업들의 추악한 이면이 드러났습니다. 소비자들의 현명한 환경적 불매 운동이 요구됩니다.",
-                author: "그린피스 청년 지부",
-                time: "32분 전"
-            },
-            {
-                id: 'A4',
-                type: 'A',
-                title: "식습관만 바꿔도 온실가스 절반 감소: 비건 식단의 힘",
-                content: "공장식 축산업이 내뿜는 메탄가스가 지구 온난화의 주범입니다. 일주일에 단 한 번 육식을 줄이는 실천이 어떤 큰 변화를 이끌어내는지 확인하세요.",
-                author: "비건 연합 리포트",
-                time: "1시간 전"
-            },
-            {
-                id: 'A5',
-                type: 'A',
-                title: "플라스틱 장난감의 경고... 바다거북 위장에서 나온 것들",
-                content: "우리가 편리하게 쓰고 버린 해양 폐기물들이 해양 생태계를 죽이고 미세 플라스틱이 되어 다시 우리 식탁으로 되돌아오고 있습니다. 플라스틱 전면 사용 금지 법안 입법화가 필요합니다.",
-                author: "바다생태지킴이",
-                time: "3시간 전"
-            },
-            {
-                id: 'A6',
-                type: 'A',
-                title: "패스트 패션의 기후 범죄: 입지 않고 버려지는 새 옷들",
-                content: "저렴한 합성 소재 의류의 생산과 소각 과정에서 심각한 독성 연기와 탄소가 발생합니다. 슬로우 웨어 문화를 정착시키는 윤리적 소비가 긴급합니다.",
-                author: "의식있는 소비 연구회",
-                time: "5시간 전"
-            },
-            {
-                id: 'A7',
-                type: 'A',
-                title: "신재생 에너지 개발에 세금 혜택 더 줘야... 입법 청원 30만 돌파",
-                content: "태양광 및 풍력 설비 투자 세액 공제율을 높이는 법안에 대한 시민 청원이 마감 직전 30만 명의 성원을 넘겼습니다. 시민의 의지가 국회로 전달됩니다.",
-                author: "그린 입법 청원센터",
-                time: "8시간 전"
-            }
+            { id: 'A1', type: 'A', title: "기후 위기 임계점 돌파... 당장 행동하지 않으면 미래는 없다", content: "UN 기후변화협의체 보고서에 따르면 최근의 해수면 상승 속도가 통제 예측선을 완전히 상회하고 있습니다. 일회용 플라스틱 및 탄소 규제 강화를 촉구하는 청년 연대 운동이 전 세계적으로 커지고 있습니다.", author: "기후행동 네트워크", time: "방금 전" },
+            { id: 'A2', type: 'A', title: "친환경 탄소배출 제로 달성한 유럽 '그린시티'의 기적", content: "도시 전체 소비 에너지의 100%를 풍력과 수소 발전으로 완벽히 충당하는 유럽 스마트 타운을 취재했습니다. 친환경 중심 에너지 믹스는 지속 가능성과 막대한 관광 수익을 동시에 가져옵니다.", author: "에코글로벌 저널", time: "10분 전" },
+            { id: 'A3', type: 'A', title: "글로벌 대기업들의 위장 환경주의 '그린워싱' 심층 폭로", content: "친환경 라벨만 교묘하게 디자인한 채 실제로는 폐플라스틱 해외 이송 및 전력 소비를 극대화한 IT 플랫폼의 뒷모습이 확인되었습니다. 소비자 행동을 통한 엄격한 윤리적 징벌이 필요합니다.", author: "그린피스 청년 지부", time: "32분 전" }
         ];
 
-        // Topic B: 산업 개발론 (Industrial Development)
         const postsB = [
-            {
-                id: 'B1',
-                type: 'B',
-                title: "국가 경제 안보 위기! 반도체 신공장 규제 전면 완화 촉구",
-                content: "최첨단 반도체 클러스터 구축에 지자체의 복잡한 기후 규제가 발목을 잡고 있습니다. 신속한 경제 성장을 위해 세제 혜택과 규제 철폐가 시급합니다.",
-                author: "미래경제 포럼",
-                time: "방금 전"
-            },
-            {
-                id: 'B2',
-                type: 'B',
-                title: "원자력 발전소 추가 건설 확정... 안정적 전기 수급의 열쇠",
-                content: "신재생 에너지는 발전 단가가 너무 비싸 민생 부담이 큽니다. 가장 탄소배출이 적고 생산 효율이 높은 친환경 고밀도 에너지는 원자력입니다.",
-                author: "에너지안보 전력학회",
-                time: "12분 전"
-            },
-            {
-                id: 'B3',
-                type: 'B',
-                title: "그린벨트 규제 완화 효과... 일자리 5만 개 신규 창출 기대",
-                content: "오랫동안 묶여 개발되지 못해 슬럼화된 지역을 해제하고, 첨단 물류 단지를 건설합니다. 고용 인구 증가는 지방 소멸 대안의 지름길입니다.",
-                author: "국토개발 산업포커스",
-                time: "35분 전"
-            },
-            {
-                id: 'B4',
-                type: 'B',
-                title: "우주 시대로의 도약: 민간 주도 초고속 로켓 개발 활성화",
-                content: "글로벌 시장의 경쟁 속에서 규제 타파를 무기로 혁신을 일구는 우주 항공 벤처 기업을 탐색했습니다. 신대륙 정복과 우주 자원 개척은 미래 생존입니다.",
-                author: "테크 이노베이터",
-                time: "1시간 전"
-            },
-            {
-                id: 'B5',
-                type: 'B',
-                title: "첨단 신도시 스마트 그리드 건설... 고효율 경제 모델의 승리",
-                content: "에너지 소비 패턴을 AI 분석으로 통제해 도시 생산성을 전면 극대화했습니다. 섣부른 감축보단 스마트한 최적화 개발이 기후 위기 극복의 답입니다.",
-                author: "스마트시티 연구회",
-                time: "4시간 전"
-            },
-            {
-                id: 'B6',
-                type: 'B',
-                title: "IT 인프라 조성을 위한 과감한 법인세 인하 필요... 경제 단체 공동 제언",
-                content: "해외 우수 개발 기업들의 한국 정착을 돕기 위해 복잡한 규제를 혁파하고 글로벌 시장 기준에 부합하는 세율 조정을 건의하는 경제 보고서가 발표되었습니다.",
-                author: "대한상공 개발 연합",
-                time: "6시간 전"
-            },
-            {
-                id: 'B7',
-                type: 'B',
-                title: "AI와 자율주행 선도를 위한 골든타임... 규제 장벽 먼저 허물어야",
-                content: "경쟁력 확보에 속도만큼 중요한 것은 없습니다. 가이드라인 제정에 매몰된 사이 해외 독점 기업들이 안방까지 점령할 것이란 심각한 경고가 나옵니다.",
-                author: "미래 ICT 트렌드",
-                time: "9시간 전"
-            }
+            { id: 'B1', type: 'B', title: "국가 경제 생존 위기! 반도체 신공장 기후 규제 철폐 촉구", content: "최첨단 반도체 클러스터 인프라 조성을 앞두고 무리한 지자체 단위 환경 영향 평가가 신속한 투자의 발목을 잡고 있습니다. 시장 경쟁력 사수를 위해 일시적 혜택과 규제 유예가 간절합니다.", author: "미래경제 포럼", time: "방금 전" },
+            { id: 'B2', type: 'B', title: "원자력 발전소 추가 건설 시급... 안정적 기저 전력의 열쇠", content: "신재생 에너지는 발전 단가가 너무 불안정하여 국가 제조업 전반의 전기세 인상을 초래합니다. 가장 현실적이고 탄소 배출이 적은 고밀도 청정에너지는 최첨단 가압형 원전 건설뿐입니다.", author: "에너지안보 전력학회", time: "12분 전" },
+            { id: 'B3', type: 'B', title: "그린벨트 경제 규제 대폭 완화... 산업 단지 연계 일자리 5만 개 창출", content: "오랫동안 비개발 지대로 방치된 지역의 한계를 극복하고 대대적인 자원 물류 허브 허가를 앞당겼습니다. 규제 완화에 따른 지방 고용 증가는 지역 상권 소멸을 박는 최고의 유인책입니다.", author: "국토개발 산업포커스", time: "35분 전" }
         ];
 
-        // Topic C: 중립 포스트 (Neutral/General) - 초기 유입 다양성을 확보하기 위한 데이터
         const postsNeutral = [
-            {
-                id: 'N1',
-                type: 'N',
-                title: "오늘 저녁 전국 가을 단풍 만개... 가족 나들이 추천 코스",
-                content: "기상청에 따르면 주말 동안 맑고 쾌적한 전형적인 가을 날씨가 계속되어 단풍이 절정에 다다를 예정입니다. 도심 공원에서 즐길 수 있는 추천 단풍길입니다.",
-                author: "라이프 위클리",
-                time: "2시간 전"
-            },
-            {
-                id: 'N2',
-                type: 'N',
-                title: "고등학생들이 꼽은 최고 인기 학식 메뉴 1위는?",
-                content: "급식 환경 트렌드 설문 조사 결과 학생 만족도가 가장 높은 주간 인기 신메뉴 분석 통계를 공유합니다.",
-                author: "교육 정보 아카이브",
-                time: "4시간 전"
-            }
+            { id: 'N1', type: 'N', title: "오늘 저녁 전국 국립공원 가을 단풍 최고조... 나들이 안전 가이드", content: "기상청 통보에 따르면 다음 주 초반까지 대체로 맑고 높은 일교차가 유지되면서 중부 지방 중심 단풍 물결이 절정을 보일 전망입니다. 하이킹 시 온수와 긴 소매 옷 지참을 권장합니다.", author: "라이프 위클리", time: "2시간 전" }
         ];
 
-        // === 2. 애플리케이션 상태 전역 관리 ===
-        let likesA = 0;          // 환경 보호 포스트 누적 좋아요 수
-        let likesB = 0;          // 산업 개발 포스트 누적 좋아요 수
-        let exposureHistory = []; // 노출된 포스트의 타입 히스토리 (A, B, N)를 저장하는 배열 (최대 20개 유지)
-        let bubbleWarningTriggered = false; // 필터 버블 경고 활성화 플래그
-        let bubbleBurstedMode = false; // 사용자가 '필터 버블 파괴' 버튼을 눌렀을 때 작동하는 모드
+        // === 2. 기사별 다각도 교차 프레임 분석 텍스트 데이터베이스 (로컬 전용 정밀 문서 수록) ===
+        const localFrameDatabase = {
+            'A1': {
+                title: "기후 위기 임계점 돌파... 당장 행동하지 않으면 미래는 없다",
+                category: "환경 보호론 (A 성향)",
+                frame: "공포 소구(Fear Appeal) 및 긴급성 강조 프레임",
+                confirmation: "기후 재앙론에 가중치와 심리적 불안을 부가하여, '즉각적 제재만이 유일한 구원'이라는 단일 가치관으로 독자를 묶어 확증 편향을 형성하기 쉽습니다.",
+                counter: "급진적 기후 규제안이 즉시 실행될 때, 산업적 기초 인프라 전환에 따른 원자재 인플레이션(그린플레이션)과 중소기업의 도산 비율, 그리고 전기 수급 망의 급진적 단절로 인한 사회적 부작용에 대해서는 논의하지 않는 한계를 지닙니다.",
+                literacy: "해당 보도처럼 극단적인 파국 시나리오를 주장하는 텍스트는 원인 분석 단계에서 통계적 범주가 어떻게 제한되었는지 원문을 교차 검토해야 하며, '당장', '파멸' 같은 형용사적 주입 방식에 감정이 동요되지 않도록 중립을 사수하십시오."
+            },
+            'A2': {
+                title: "친환경 탄소배출 제로 달성한 유럽 '그린시티'의 기적",
+                category: "환경 보호론 (A 성향)",
+                frame: "성공 사례 일반화(Success Model Generalization) 및 이상향 지향 프레임",
+                confirmation: "해외 선진 모범사례만을 조명하여 '규제와 친환경 전환은 언제나 기적적인 경제 선순환을 부른다'는 미화주의 확증 편향을 초래합니다.",
+                counter: "해당 도시가 에너지를 완벽히 수급하는 기저 배경에는 대규모 국경 연결 전력망을 통한 타 국가 화석연료 전기 보조 수입망이 은폐되어 있거나, 타 국가 대비 압도적으로 풍부한 지열/수력 등 자연 입지적 격차가 존재한다는 현실을 간과합니다.",
+                literacy: "해외 모범사례를 가치적 이상향으로 삼아 국내에 그대로 대입하려는 뉴스를 만날 때는, 우리나라의 제조업 비중과 지리적 에너지 수급 난제(고립 전력망)라는 한국적 역학 변수가 동일한 선상에 있는지 체크해 볼 필요가 있습니다."
+            },
+            'A3': {
+                title: "글로벌 대기업들의 위장 환경주의 '그린워싱' 심층 폭로",
+                category: "환경 보호론 (A 성향)",
+                frame: "도덕적 징벌 및 이분법적 선악 구도 프레임",
+                confirmation: "플랫폼 및 대기업 집단을 일방적인 환경 가해자로 묘사하여 반기업 정서와 소비자 징벌주의 중심의 이데올로기적 확증 편향을 가속합니다.",
+                counter: "대기업과 IT 업계가 탄소 배출을 줄이기 위해 현재 실천 중인 막대한 신재생 에너지 인프라 직접적 투자 및 고용 증대 사실을 평면화하고, 사소한 위장 라벨 실수를 마치 전체 경영 이념인 양 일반화하는 과장 서사가 동반되어 있습니다.",
+                literacy: "기업의 반사회적 실정을 폭로하는 고발 뉴스는 단호한 검증 기능을 지니지만, 동시에 공격받는 대상 측의 실체적인 데이터 해명 보도나 법적 소송 전개 양상을 함께 검색해 양측의 입장을 대등하게 독서해야 합니다."
+            },
+            'B1': {
+                title: "국가 경제 생존 위기! 반도체 신공장 기후 규제 철폐 촉구",
+                category: "산업 개발론 (B 성향)",
+                frame: "국가적 안보 결합 공포(National Security Fear) 및 경제 위기 극복 서사 프레임",
+                confirmation: "'규제 완화 = 경제 성장', '환경 보호 = 국가적 발목 잡기'라는 적대적 구조를 설정하여, 개발 가중치의 맹목적 당위성을 독자에게 주입하고 편향을 형성합니다.",
+                counter: "글로벌 공급망 재조정 국면에서, 친환경 기준(RE100, CBAM 탄소국경조정제도)을 장기적으로 충족하지 못해 발생하는 글로벌 거래처의 대규모 발주 취소 사태나 국제 금융 패널티 등 '규제 완화'가 부를 장기적 생태-무역 붕괴 비용은 철저히 무시됩니다.",
+                literacy: "규제 혁파만이 국가 생존을 지키는 묘책처럼 서술하는 경제 매체 뉴스는, 해당 규제가 보호하고 있는 지자체 공동체 생태 식수 보존권이나 노동자의 건강권과 같은 '보이지 않는 공공의 이익 보존 비용'이 무자비하게 청산되고 있는지 확인해야 합니다."
+            },
+            'B2': {
+                title: "원자력 발전소 추가 건설 시급... 안정적 기저 전력의 열쇠",
+                category: "산업 개발론 (B 성향)",
+                frame: "수치 합리성 및 과학적 절대화 프레임",
+                confirmation: "단가 대비 효율성 수치를 강력히 내세우며, '원자력만이 재생 에너지의 비싼 비용을 상쇄하는 영웅적 에너지'라는 환상형 원전 선호 확증 편향을 구축합니다.",
+                counter: "임계점을 초과하고 있는 고준위 방사성 폐기물(사용후핵연료) 영구 처분장 건립에 따른 막대한 지자체 갈등 비용과 사회적 합의 금융 부담, 해체 처리 기술 비용은 초기 발전 단가 연산식에서 은밀히 누락되어 기획되었다는 점을 침묵합니다.",
+                literacy: "수치와 효율성을 바탕으로 과학적 정당성을 어필하는 에너지 뉴스일수록, 수십 년 뒤 미래 세대가 세금으로 갚아야 할 영구 폐기 및 사후 폐쇄 비용이 장부에서 제외된 채 '일시적 경제성'만 강조한 편중된 보고서가 아닌지 따져 보아야 합니다."
+            },
+            'B3': {
+                title: "그린벨트 경제 규제 대폭 완화... 산업 단지 연계 일자리 5만 개 창출",
+                category: "산업 개발론 (B 성향)",
+                frame: "지방 소멸 대안 및 가시적 실익(Employment Appeal) 프레임",
+                confirmation: "규제 보호구역 해제가 불러오는 단기 개발 이윤과 주택/일자리 창출을 장미빛으로 부각하여 도시 지속 가능성의 장기 위험에 눈을 감게 만드는 편향을 유도합니다.",
+                counter: "그린벨트 보존 구역이 지탱하던 대기 정화 기능, 홍수 방지력, 그리고 도심 열섬 현상 제어라는 무료 생태 서비스 가치가 파괴되면서 도시 전체의 환경 인프라 복구 유지보수 세금 예산 지출이 상상 이상으로 늘어난다는 점은 보도하지 않습니다.",
+                literacy: "개발 규제를 풀어서 신규 고용이나 주거 안정을 꾀한다는 뉴스를 만났을 때는, 그 혜택이 누구에게(일부 건설 대기업 및 부동산업 vs 해당 지역 청년 및 실거주민) 집중되고, 그로 인해 사라질 녹지 생태망 혜택 차단 손실은 누가 떠안게 되는지 입체적으로 해부해 보아야 합니다."
+            },
+            'N1': {
+                title: "오늘 저녁 전국 국립공원 가을 단풍 최고조... 나들이 안전 가이드",
+                category: "중립 일반 정보 (Neutral)",
+                frame: "생활 밀착형 사실 나열 프레임",
+                confirmation: "이념적/사회적 대립 요인이 배제된 순수한 자연 정보 기사입니다. 알고리즘 가중치가 균형 상태일 때 주로 추천 스트림에 안전 장치로 유입되는 경향을 띱니다.",
+                counter: "전체 지구온난화 가속화로 인해 단풍 물결의 절정 시기가 매년 수일 이상 가파르게 늦어지고 있는 전 지구적 기후 스트레스 지표를 가볍게 누락하고 단순 일시성 나들이 유희로 포장하고 있다는 시각도 존재합니다.",
+                literacy: "갈등이 없는 평범한 정보용 뉴스에서도 기후 데이터의 실시간 거시적 주기가 장기적으로 어떻게 변화하고 있는지 연결하여 탐구해보는 것이 융합적 리터러시 훈련의 첫걸음입니다."
+            }
+        };
 
+        // === 3. 전역 시뮬레이션 수치 관리 및 가중치 누적 상태 ===
+        let scoreA = 0.0; // 환경보호론 성향 점수
+        let scoreB = 0.0; // 산업개발론 성향 점수
+        let totalActions = 0; // 총 수집 액션 로그 (좋아요 + 분석)
+        let exposureStream = []; // 최근 지나간 피드 성향 저장 (최대 20개)
+        let isBursted = false;
+
+        // 개별 피드 기사 카드의 인터랙션 상태 관리 아카이브
+        let cardStates = {}; 
+
+        // feed-container 요소를 전역 상수로 조기에 선언하여 정의되지 않는 오류를 완전히 차단합니다.
         const feedContainer = document.getElementById('feed-container');
 
-        // === 3. 실시간 알고리즘 큐레이션 엔진 핵심 수식 ===
-        // 사용자의 관심도에 맞춰 다음 포스트의 유형을 결정하는 핵심 확률 로직입니다.
-        function getNextPostType() {
-            // 필터 버블 파괴 모드가 켜진 경우, 강제로 무작위 균등 분배하여 편향성을 완화합니다.
-            if (bubbleBurstedMode) {
-                const randomVal = Math.random();
-                if (randomVal < 0.4) return 'A';
-                if (randomVal < 0.8) return 'B';
-                return 'N';
-            }
+        // === 4. 애플리케이션 기동 통제 ===
+        function startSimulator() {
+            const introPage = document.getElementById('intro-page');
+            introPage.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                introPage.style.display = 'none';
+            }, 300);
 
-            const totalLikes = likesA + likesB;
-            
-            // 1) 초기 데이터가 없거나 수치가 같을 땐 균형 있게 분배 (중립 카드 포함)
-            if (totalLikes === 0) {
-                const rand = Math.random();
-                if (rand < 0.4) return 'A';
-                if (rand < 0.8) return 'B';
-                return 'N';
-            }
-
-            // 2) 제곱(Quadratic) 추천 가중치 알고리즘 구현 (★ 핵심)
-            const weightA = Math.pow(likesA + 1, 2);
-            const weightB = Math.pow(likesB + 1, 2);
-            const totalWeight = weightA + weightB;
-
-            const probabilityA = weightA / totalWeight; // 환경보호 포스트 노출될 확률 값
-            const randVal = Math.random();
-
-            // 소량의 다양성 유지를 위해 5% 확률로는 무조건 중립(N) 카드를 배치
-            if (randVal < 0.05) return 'N';
-            
-            // 나머지 95% 비중을 알고리즘 확률 비율에 대입
-            const adjustedRand = (randVal - 0.05) / 0.95;
-            return adjustedRand < probabilityA ? 'A' : 'B';
+            resetSimulator();
         }
 
-        // 특정 카테고리 데이터 내에서 무작위 포스트 하나를 선별하여 반환
-        function getRandomPost(type) {
-            let pool;
-            if (type === 'A') pool = postsA;
-            else if (type === 'B') pool = postsB;
-            else pool = postsNeutral;
+        // === 5. 제곱(Quadratic) 공식에 기반한 알고리즘 큐레이션 알고리즘 ===
+        function getNextFeedType() {
+            if (isBursted) {
+                return Math.random() < 0.5 ? 'A' : 'B';
+            }
 
-            const index = Math.floor(Math.random() * pool.length);
-            return { ...pool[index] }; // 데이터 깊은 복사
+            // 가치관 점수가 아직 축적되지 않은 극초기 단계의 경우 고른 분산 보장
+            if (scoreA === 0 && scoreB === 0) {
+                const r = Math.random();
+                return r < 0.45 ? 'A' : r < 0.90 ? 'B' : 'N';
+            }
+
+            // 단순 덧셈이 아닌 제곱 공식으로 가속하여, 한쪽 진영을 선택했을 때 필터 버블 진입 확률을 드라마틱하게 증폭시킵니다.
+            const weightA = Math.pow(scoreA + 1, 2);
+            const weightB = Math.pow(scoreB + 1, 2);
+            const totalW = weightA + weightB;
+
+            const probA = weightA / totalW;
+            const rand = Math.random();
+
+            if (rand < 0.05) return 'N'; // 중립적 다원성 보존 확률 5% 확보
+            
+            const adjustedRand = (rand - 0.05) / 0.95;
+            return adjustedRand < probA ? 'A' : 'B';
         }
 
-        // === 4. UI 렌더링 업데이트 함수들 ===
+        // 동적 카드 구성요소 구성 (Lucide 아이콘 대응)
+        function drawPostCard(post) {
+            // 카드의 고유 상태 식별을 위해 인스턴스 ID 자동 부여
+            const instanceId = `inst_${post.id}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+            cardStates[instanceId] = {
+                liked: false,
+                factchecked: false,
+                type: post.type,
+                originId: post.id
+            };
 
-        // (1) 포스트 카드 동적 HTML 템플릿 생성 및 주입
-        function createPostCardElement(post) {
             const card = document.createElement('div');
-            card.className = "bg-panelBg border border-gray-800 hover:border-gray-700 p-5 rounded-2xl shadow-xl transition-all duration-300 transform animate-fade-in relative overflow-hidden group";
-            card.dataset.id = post.id;
-            card.dataset.type = post.type;
-
-            // 성향에 맞춘 좌측 하단 네온 글로우 보더 라인 효과
-            let borderAccent = "border-l-4 border-l-gray-600";
-            let typeBadge = "";
+            card.className = "bg-panelBg border border-gray-800/80 p-5 rounded-2xl shadow-xl transition-all duration-300 transform animate-fade-in relative overflow-hidden";
+            card.setAttribute('data-instance-id', instanceId);
             
-            if (post.type === 'A') {
-                borderAccent = "border-l-4 border-l-emerald-500";
-                typeBadge = `<span class="text-[10px] font-bold text-accentA px-2 py-0.5 bg-accentA/10 border border-accentA/20 rounded-md">환경 보호 이슈</span>`;
-            } else if (post.type === 'B') {
-                borderAccent = "border-l-4 border-l-blue-500";
-                typeBadge = `<span class="text-[10px] font-bold text-accentB px-2 py-0.5 bg-accentB/10 border border-accentB/20 rounded-md">테크/산업 경제</span>`;
-            } else {
-                typeBadge = `<span class="text-[10px] font-bold text-gray-400 px-2 py-0.5 bg-gray-800 border border-gray-700 rounded-md">일반 소식</span>`;
-            }
-
-            card.className += ` ${borderAccent}`;
+            let accentBorder = post.type === 'A' ? 'border-l-4 border-l-emerald-500' : post.type === 'B' ? 'border-l-4 border-l-blue-500' : 'border-l-4 border-l-gray-600';
+            card.className += ` ${accentBorder}`;
 
             card.innerHTML = `
-                <div class="flex justify-between items-start mb-3">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center font-bold text-xs text-gray-300 border border-gray-700">
-                            ${post.author.charAt(0)}
-                        </div>
-                        <div>
-                            <div class="text-xs font-semibold text-gray-200">${post.author}</div>
-                            <div class="text-[10px] text-gray-500">${post.time} · 추천 피드</div>
-                        </div>
-                    </div>
-                    ${typeBadge}
+                <div class="flex justify-between items-center mb-3 text-xs">
+                    <span class="font-bold text-gray-300">${post.author}</span>
+                    <span class="text-gray-500 text-[10px]">${post.time}</span>
                 </div>
-                
-                <h4 class="text-base font-bold text-gray-100 mb-2 leading-snug group-hover:text-blue-400/90 transition-colors duration-200">
-                    ${post.title}
-                </h4>
-                
-                <p class="text-sm text-gray-400 leading-relaxed mb-4">
-                    ${post.content}
-                </p>
-                
-                <div class="flex items-center justify-between border-t border-gray-800/80 pt-3 mt-2 text-xs">
-                    <div class="text-[11px] text-gray-500 flex items-center space-x-1">
-                        <i data-lucide="eye" class="w-3.5 h-3.5"></i>
-                        <span>알고리즘 추천 수신됨</span>
+                <h4 class="text-sm font-bold text-gray-100 mb-2 leading-snug">${post.title}</h4>
+                <p class="text-xs text-gray-400 leading-relaxed mb-4">${post.content}</p>
+                <div class="flex justify-between items-center border-t border-gray-800/50 pt-3">
+                    <span class="text-[10px] text-gray-500 flex items-center"><i data-lucide="eye" class="w-3 h-3 mr-1"></i>추천 엔진 매칭 노출</span>
+                    <div class="flex space-x-1.5">
+                        <button onclick="handleFactCheck('${instanceId}', this)" class="flex items-center space-x-1 px-2.5 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/20 text-[11px] font-bold rounded-lg transition-all">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i><span>✨ 교차 프레임 분석</span>
+                        </button>
+                        <button onclick="handleLikeToggle('${instanceId}', this)" class="flex items-center space-x-1 px-2.5 py-1.5 bg-gray-800 hover:bg-rose-500/10 text-gray-400 hover:text-rose-400 border border-gray-700 text-[11px] font-bold rounded-lg transition-all">
+                            <i data-lucide="heart" class="w-3.5 h-3.5"></i><span>좋아요</span>
+                        </button>
                     </div>
-                    <button onclick="handleLike('${post.id}', '${post.type}', this)" class="like-btn flex items-center space-x-1.5 px-3 py-1.5 bg-gray-800 hover:bg-rose-500/10 text-gray-400 hover:text-rose-400 border border-gray-700 hover:border-rose-500/30 rounded-xl transition-all duration-200">
-                        <i data-lucide="heart" class="w-4 h-4 transition-transform duration-200 active:scale-150"></i>
-                        <span class="font-bold">좋아요</span>
-                    </button>
                 </div>
             `;
-
             return card;
         }
 
-        // (2) 실시간 피드 노출 스트림 도트 렌더링
-        function updateStreamUI() {
-            const container = document.getElementById('stream-container');
-            container.innerHTML = '';
+        // 복합 큐레이션 로딩
+        function loadFeeds(count = 3) {
+            const container = document.getElementById('feed-container');
+            if (!container) return;
+            for (let i = 0; i < count; i++) {
+                const type = getNextFeedType();
+                let pool = type === 'A' ? postsA : type === 'B' ? postsB : postsNeutral;
+                let post = { ...pool[Math.floor(Math.random() * pool.length)] };
 
-            if (exposureHistory.length === 0) {
-                container.innerHTML = `<span class="text-xs text-gray-500 m-auto text-center">피드 생성 이력이 아직 없습니다.</span>`;
-                return;
+                exposureStream.push(type);
+                if (exposureStream.length > 20) exposureStream.shift();
+
+                container.appendChild(drawPostCard(post));
             }
-
-            exposureHistory.forEach(type => {
-                const dot = document.createElement('span');
-                dot.className = "w-3 h-3 rounded-full transition-all duration-300 transform scale-100 hover:scale-125 cursor-help";
-                
-                if (type === 'A') {
-                    dot.className += " bg-accentA shadow-sm shadow-emerald-500/40";
-                    dot.title = "환경 보호 포스트";
-                } else if (type === 'B') {
-                    dot.className += " bg-accentB shadow-sm shadow-blue-500/40";
-                    dot.title = "산업 개발 포스트";
-                } else {
-                    dot.className += " bg-gray-500";
-                    dot.title = "중립 뉴스";
-                }
-                container.appendChild(dot);
-            });
+            if (totalActions >= 5) renderStreamUI();
+            lucide.createIcons();
         }
 
-        // (3) 대시보드 실시간 점수 분석 및 차트 갱신
-        function updateDashboardUI() {
-            const totalLikes = likesA + likesB;
-            document.getElementById('total-clicks').innerText = `관심 로그: ${totalLikes}회`;
+        // === 6. 행동 속성별 차등 편향 적용 수식 관리 ===
 
-            // 비율 연산
-            let ratioA = 50;
-            let ratioB = 50;
+        // (1) 좋아요 토글 처리 핸들러 (등록 및 취소 실시간 추적)
+        function handleLikeToggle(instanceId, btn) {
+            const state = cardStates[instanceId];
+            if (!state) return;
 
-            if (totalLikes > 0) {
-                ratioA = Math.round((likesA / totalLikes) * 100);
-                ratioB = Math.round((likesB / totalLikes) * 100);
+            const icon = btn.querySelector('svg, i');
+
+            if (!state.liked) {
+                // 좋아요 등록 (+2.0 반영)
+                state.liked = true;
+                btn.classList.add('bg-rose-500/20', 'text-rose-400', 'border-rose-500/30');
+                if (icon) {
+                    icon.setAttribute('fill', 'currentColor');
+                }
+
+                if (state.type === 'A') scoreA += 2.0;
+                if (state.type === 'B') scoreB += 2.0;
+
+                totalActions++;
+            } else {
+                // 좋아요 취소 (-2.0 감산 복구)
+                state.liked = false;
+                btn.classList.remove('bg-rose-500/20', 'text-rose-400', 'border-rose-500/30');
+                if (icon) {
+                    icon.removeAttribute('fill');
+                }
+
+                if (state.type === 'A') scoreA = Math.max(0, scoreA - 2.0);
+                if (state.type === 'B') scoreB = Math.max(0, scoreB - 2.0);
+
+                totalActions = Math.max(0, totalActions - 1);
+            }
+            syncSimulationState();
+        }
+
+        // (2) ✨ 교차 프레임 분석 클릭 시: 중복 누적 방지 (기사당 딱 1회만 가중치 반영)
+        function handleFactCheck(instanceId, btn) {
+            const state = cardStates[instanceId];
+            if (!state) return;
+
+            const isFirstCheck = !state.factchecked;
+
+            // 최초 1회에 한해서만 알고리즘 편향 완화 가중치 계산에 가산 반영
+            if (isFirstCheck) {
+                state.factchecked = true;
+                if (state.type === 'A') {
+                    scoreA += 0.5;
+                    scoreB += 1.2; // 반대 성향 B를 향한 알고리즘 유연성 보정
+                } else if (state.type === 'B') {
+                    scoreB += 0.5;
+                    scoreA += 1.2;
+                }
+                totalActions++;
+                syncSimulationState();
             }
 
-            // 가로 바 길이 갱신
-            document.getElementById('percent-A').innerText = `${ratioA}%`;
-            document.getElementById('bar-A').style.width = `${ratioA}%`;
-            document.getElementById('clicks-A').innerText = `좋아요 ${likesA}회 수집됨`;
+            const modal = document.getElementById('ai-modal');
+            const content = document.getElementById('ai-modal-content');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
 
-            document.getElementById('percent-B').innerText = `${ratioB}%`;
-            document.getElementById('bar-B').style.width = `${ratioB}%`;
-            document.getElementById('clicks-B').innerText = `좋아요 ${likesB}회 수집됨`;
+            // 로컬 정밀 프레임 데이터베이스 매핑
+            const frameInfo = localFrameDatabase[state.originId];
+            if (frameInfo) {
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded">
+                                ${frameInfo.category}
+                            </span>
+                            <h4 class="text-sm font-black text-white mt-2 leading-snug">기사명: "${frameInfo.title}"</h4>
+                        </div>
+                        
+                        <div class="border-t border-gray-800 pt-3 space-y-3 text-[11.5px] leading-relaxed">
+                            <div class="bg-gray-900/60 p-3.5 rounded-xl border border-gray-800">
+                                <p class="font-extrabold text-emerald-400 flex items-center mb-1">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5 mr-1.5"></i>
+                                    1. 미디어가 주입한 숨겨진 주요 프레임
+                                </p>
+                                <p class="text-white font-semibold">${frameInfo.frame}</p>
+                            </div>
 
-            // 요소를 안전하게 확보
-            const levelText = document.getElementById('bias-level-text');
-            const descText = document.getElementById('bias-desc');
-            const gaugeCircle = document.getElementById('gauge-circle');
-            const biasValueText = document.getElementById('bias-value');
+                            <div class="space-y-1.5">
+                                <p class="font-bold text-gray-200 flex items-center">
+                                    <i data-lucide="crosshair" class="w-3.5 h-3.5 mr-1.5 text-blue-400"></i>
+                                    2. 추천 알고리즘의 확증 편향 유도 원리
+                                </p>
+                                <p class="text-gray-400 pl-5">${frameInfo.confirmation}</p>
+                            </div>
 
-            // [핵심 변경 사항] 좋아요 개수가 3개 이상일 때부터 게이지를 정확히 출력
-            if (totalLikes >= 3) {
+                            <div class="space-y-1.5">
+                                <p class="font-bold text-gray-200 flex items-center">
+                                    <i data-lucide="refresh-cw" class="w-3.5 h-3.5 mr-1.5 text-purple-400"></i>
+                                    3. 상충하며 대립하는 균형적 반대론
+                                </p>
+                                <p class="text-gray-400 pl-5">${frameInfo.counter}</p>
+                            </div>
+
+                            <div class="bg-blue-950/20 p-3.5 rounded-xl border border-blue-900/30 mt-2">
+                                <p class="font-extrabold text-blue-400 flex items-center mb-1">
+                                    <i data-lucide="shield-check" class="w-3.5 h-3.5 mr-1.5"></i>
+                                    4. 미디어 리터러시 행동 가이드라인
+                                </p>
+                                <p class="text-gray-300">${frameInfo.literacy}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = `<p class="text-gray-400 text-center py-6">일치하는 분석 파일이 로컬 캐시에 존재하지 않습니다.</p>`;
+            }
+            lucide.createIcons();
+        }
+
+        // === 7. 실시간 알고리즘 큐레이션 이력 스트림 시각화 및 잠금 제어 ===
+        function syncSimulationState() {
+            document.getElementById('activity-counter').innerText = `데이터 수집 로그: ${totalActions}회 수집됨`;
+
+            const lock = document.getElementById('dashboard-locked');
+            const unlock = document.getElementById('dashboard-unlocked');
+
+            if (totalActions >= 3) {
+                lock.style.display = 'none';
+                unlock.classList.remove('hidden');
+
+                const totalScore = scoreA + scoreB;
+                let ratioA = 50;
+                let ratioB = 50;
+
+                if (totalScore > 0) {
+                    ratioA = Math.round((scoreA / totalScore) * 100);
+                    ratioB = Math.round((scoreB / totalScore) * 100);
+                }
+
+                document.getElementById('percent-A').innerText = `${ratioA}%`;
+                document.getElementById('bar-A').style.width = `${ratioA}%`;
+                document.getElementById('percent-B').innerText = `${ratioB}%`;
+                document.getElementById('bar-B').style.width = `${ratioB}%`;
+
+                document.getElementById('detox-score-info').innerText = `환경 가치관(${scoreA.toFixed(1)}) 대 경제적 실익(${scoreB.toFixed(1)})의 편향비를 연산 중입니다.`;
+
                 const biasScore = Math.abs(ratioA - ratioB);
-                biasValueText.innerText = `${biasScore}%`;
+                document.getElementById('bias-value').innerText = `${biasScore}%`;
 
-                // 게이지 원형 바 형태 업데이트
-                const circumference = 2 * Math.PI * 40; // 반지름 40, 약 251.2
-                const offset = circumference - (biasScore / 100) * circumference;
-                gaugeCircle.style.strokeDashoffset = offset;
+                // 원형 SVG 게이지 갱신
+                const circle = document.getElementById('gauge-circle');
+                circle.style.strokeDashoffset = 251.2 - (biasScore / 100) * 251.2;
 
-                // 편향도 등급 판별 텍스트 업데이트
-                if (biasScore < 20) {
-                    levelText.innerText = "중립";
-                    levelText.className = "text-[10px] font-bold uppercase tracking-wider text-gray-400 mt-1 px-2 py-0.5 bg-gray-800/80 rounded-full";
-                    descText.innerText = "균형 잡힌 타임라인입니다. 두 분야의 의견이 공평하게 교차되어 공급되는 상태입니다.";
-                } else if (biasScore < 50) {
-                    levelText.innerText = "관심 유입";
-                    levelText.className = "text-[10px] font-bold uppercase tracking-wider text-emerald-400 mt-1 px-2 py-0.5 bg-emerald-950/50 border border-emerald-900 rounded-full";
-                    descText.innerText = "당신의 행동을 분석하기 시작했습니다. 선호하는 쪽의 포스트가 조금씩 자주 나타나게 유도합니다.";
-                } else if (biasScore < 70) {
-                    levelText.innerText = "강한 편향";
-                    levelText.className = "text-[10px] font-bold uppercase tracking-wider text-yellow-500 mt-1 px-2 py-0.5 bg-yellow-950/50 border border-yellow-900 rounded-full";
-                    descText.innerText = "경고: 타임라인 70% 이상이 한쪽 주장으로 도배 중입니다. 다른 진영의 의견량이 감소하고 있습니다.";
+                const lvl = document.getElementById('bias-level-text');
+                const desc = document.getElementById('bias-desc');
+
+                if (biasScore < 25) {
+                    lvl.innerText = "중립 평형";
+                    lvl.className = "text-[9px] font-bold mt-1 px-2 py-0.5 bg-gray-800 rounded-full text-gray-400";
+                    desc.innerText = "양 진영의 가중치가 고루 분산되어 타임라인 큐레이션이 중립 평형을 달성한 건강한 상태입니다.";
+                } else if (biasScore < 65) {
+                    lvl.innerText = "주의 유입";
+                    lvl.className = "text-[9px] font-bold mt-1 px-2 py-0.5 bg-yellow-950/40 border border-yellow-800/30 text-yellow-500 rounded-full";
+                    desc.innerText = "가중치 격차가 벌어지며, 추천 알고리즘이 특정 카테고리를 강제로 더 많이 유입시키는 신호입니다.";
                 } else {
-                    levelText.innerText = "필터 버블 상태";
-                    levelText.className = "text-[10px] font-bold uppercase tracking-wider text-rose-500 mt-1 px-2 py-0.5 bg-rose-950/50 border border-rose-900 rounded-full animate-pulse";
-                    descText.innerText = "임계 수준 돌파! 추천 시스템이 반대 의견을 '영구 차단'했습니다. 오로지 신념을 지지하는 뉴스만 흘러들어옵니다.";
-                    
-                    // 편향 점수 70% 돌파 시 우측 하단 경고 토스트 실행
-                    if (!bubbleWarningTriggered) {
-                        triggerFilterBubbleWarning(ratioA > ratioB ? '환경 보호론' : '산업 개발론', biasScore);
+                    lvl.innerText = "필터 버블";
+                    lvl.className = "text-[9px] font-bold mt-1 px-2 py-0.5 bg-rose-950/40 border border-rose-800/30 text-rose-500 rounded-full animate-pulse";
+                    desc.innerText = "임계선 돌파! 에코체임버 현상에 안착하여 타 진영 논리는 차단되고 당신의 확증 편향이 고착화되었습니다.";
+                }
+
+                // 5개 이상일 경우 하단 스트림 가시화 및 우측 하단 유동형 경고 팝업 가동
+                if (totalActions >= 5) {
+                    document.getElementById('stream-lock-layer').style.display = 'none';
+                    document.getElementById('stream-actual-layer').classList.remove('hidden');
+                    renderStreamUI();
+
+                    if (biasScore >= 70) {
+                        document.getElementById('warn-score').innerText = biasScore;
+                        const warnBox = document.getElementById('slide-warning');
+                        warnBox.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10');
+                        warnBox.classList.add('opacity-100', 'translate-y-0');
+                    } else {
+                        closeWarning();
                     }
+                } else {
+                    document.getElementById('stream-lock-layer').style.display = 'block';
+                    document.getElementById('stream-actual-layer').classList.add('hidden');
+                    closeWarning();
                 }
             } else {
-                // 3개 미만일 때는 수집 중 상태 안내
-                biasValueText.innerText = "대기";
-                levelText.innerText = `분석 준비 중 (${totalLikes}/3)`;
-                levelText.className = "text-[10px] font-bold uppercase tracking-wider text-blue-400 mt-1 px-2 py-0.5 bg-blue-950/50 border border-blue-900 rounded-full animate-pulse";
-                descText.innerText = "알고리즘이 편향성을 정밀 분석하려면 최소 3번의 좋아요 로그가 축적되어야 합니다.";
-                
-                // 게이지 초기 상태 고정
-                gaugeCircle.style.strokeDashoffset = 251.2;
-                
-                // 혹시 남아있을 수 있는 경고창 닫기
+                lock.style.display = 'flex';
+                unlock.classList.add('hidden');
+                document.getElementById('lock-remain').innerText = 3 - totalActions;
                 closeWarning();
             }
         }
 
-        // === 5. 이벤트 핸들러 및 동작 함수들 ===
-
-        // (1) 사용자가 좋아요를 눌렀을 때 작동하는 동작 처리
-        function handleLike(postId, type, buttonElement) {
-            // 하트 색상 변경
-            buttonElement.classList.remove('bg-gray-800', 'text-gray-400', 'border-gray-700');
-            buttonElement.classList.add('bg-rose-500/20', 'text-rose-400', 'border-rose-500/40');
-            
-            // Lucide 라이브러리가 <i> 태그를 <svg> 태그로 변환하므로 둘 다 안전하게 탐색하도록 수정
-            const icon = buttonElement.querySelector('i, svg');
-            if (icon) {
-                icon.setAttribute('fill', 'currentColor');
-            }
-            
-            buttonElement.setAttribute('disabled', 'true'); // 여러번 좋아요 클릭 방지
-
-            // 점수 가중치 증가
-            if (type === 'A') likesA++;
-            else if (type === 'B') likesB++;
-
-            // 분석 데이터 리렌더링
-            updateDashboardUI();
+        // 도트 스트림 UI 구성
+        function renderStreamUI() {
+            const container = document.getElementById('stream-actual-layer');
+            if (!container) return;
+            container.innerHTML = '';
+            exposureStream.forEach(type => {
+                const dot = document.createElement('span');
+                dot.className = `w-2.5 h-2.5 rounded-full ${type === 'A' ? 'bg-accentA shadow-md shadow-emerald-500/30' : type === 'B' ? 'bg-accentB shadow-md shadow-blue-500/30' : 'bg-gray-600'}`;
+                container.appendChild(dot);
+            });
         }
 
-        // (2) 한 번에 다량의 무작위 큐레이션 포스트 생성 공급
-        function loadMorePosts(count = 3) {
-            for (let i = 0; i < count; i++) {
-                const nextType = getNextPostType();
-                const newPost = getRandomPost(nextType);
-                
-                // 생성된 포스트 이력 트래킹 배열에 저장 (최대 20개 노출량 추적)
-                exposureHistory.push(nextType);
-                if (exposureHistory.length > 20) {
-                    exposureHistory.shift();
-                }
-
-                // 카드를 DOM 트리에 추가
-                const cardNode = createPostCardElement(newPost);
-                feedContainer.appendChild(cardNode);
-            }
-            updateStreamUI();
-            
-            // Lucide 아이콘 다시 그리기 바인딩
-            lucide.createIcons();
-        }
-
-        // (3) 필터 버블 차단 상태 경고 슬라이드인 토스트 기동
-        function triggerFilterBubbleWarning(themeName, biasScore) {
-            bubbleWarningTriggered = true;
-            document.getElementById('bubble-target-name').innerText = themeName;
-            document.getElementById('warning-bias-score').innerText = biasScore;
-            
-            const warningContainer = document.getElementById('warning-container');
-            warningContainer.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-10');
-            warningContainer.classList.add('opacity-100', 'translate-y-0');
-        }
-
-        // (4) 경고 토스트 닫기 처리
+        // 경고 메시지 상자 닫기
         function closeWarning() {
-            const warningContainer = document.getElementById('warning-container');
-            warningContainer.classList.remove('opacity-100', 'translate-y-0');
-            warningContainer.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10');
+            const warnBox = document.getElementById('slide-warning');
+            if (warnBox) {
+                warnBox.classList.remove('opacity-100', 'translate-y-0');
+                warnBox.classList.add('opacity-0', 'pointer-events-none', 'translate-y-10');
+            }
         }
 
-        // (5) 버스트 모드 작동 (임시적 확률 완화 조치)
-        function burstBubbleAndContinue() {
-            bubbleBurstedMode = true;
+        // 알고리즘 버스트 모드 가동 (포스트 강제 균등 혼합)
+        function burstBubble() {
+            isBursted = true;
             closeWarning();
+            document.getElementById('feed-container').innerHTML = '';
             
-            // 타임라인 내 일부 편향된 정보가 흩어지고 균등하게 다시 로딩됨을 표현하기 위해 
-            // 피드를 청소하고 새롭게 혼합된 데이터 주입 시뮬레이션 가동
-            feedContainer.innerHTML = '';
-            loadMorePosts(5);
-            
-            // 가중치 일부 리밸런싱
-            likesA = Math.max(1, Math.round(likesA / 2));
-            likesB = Math.max(1, Math.round(likesB / 2));
-            updateDashboardUI();
+            // 점수 강제 밸런싱 일부 회복
+            scoreA = Math.max(0, Math.round(scoreA / 3.5));
+            scoreB = Math.max(0, Math.round(scoreB / 3.5));
 
-            // 5초 간 편향 모드가 파괴된 효과를 알리는 알림 토스트 출력
-            const toast = document.createElement('div');
-            toast.className = "fixed bottom-5 left-5 bg-emerald-600 text-white font-bold text-xs px-4 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2 animate-bounce border border-emerald-500";
-            toast.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i><span>알고리즘 억제 적용: 포스트 강제 강하 비율 활성화됨</span>`;
-            document.body.appendChild(toast);
-            lucide.createIcons();
+            loadFeeds(4);
+            syncSimulationState();
+
+            // 4초 뒤 원상 상태 복귀
+            setTimeout(() => {
+                isBursted = false;
+            }, 4000);
+        }
+
+        // === 8. 🧠 실시간 5종 분기 로컬 맞춤 처방 사설 생성기 (Gemini 엔진 대안) ===
+        function generateDetoxReport() {
+            const container = document.getElementById('ai-detox-placeholder');
+            const totalScore = scoreA + scoreB;
+            
+            let ratioA = 50;
+            let ratioB = 50;
+            if (totalScore > 0) {
+                ratioA = Math.round((scoreA / totalScore) * 100);
+                ratioB = Math.round((scoreB / totalScore) * 100);
+            }
+
+            // 분석 전 대기 시각 효과 연출
+            container.innerHTML = `
+                <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800 flex flex-col items-center justify-center text-center space-y-3 animate-pulse">
+                    <div class="w-6 h-6 border-2 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+                    <div>
+                        <p class="text-[10px] font-bold text-emerald-400">데이터 흐름 분할 리밸런싱 사설 집필 중...</p>
+                        <p class="text-[8px] text-gray-500 mt-0.5">환경 지수(${ratioA}%) 대 개발 지수(${ratioB}%) 통계 매핑 중</p>
+                    </div>
+                </div>
+            `;
 
             setTimeout(() => {
-                toast.remove();
-                bubbleBurstedMode = false; // 일시 제어 후 다시 자연 상태 복귀
-                bubbleWarningTriggered = false; // 모달 재실행 대기 해제
-            }, 5000);
+                let reportHTML = '';
+
+                if (ratioA >= 75) {
+                    // 1. 극단적 환경 편향 상태
+                    reportHTML = `
+                        <div class="space-y-2 overflow-y-auto max-h-[35vh] leading-relaxed pr-1 text-gray-300 text-[11px]">
+                            <p class="font-extrabold text-emerald-400 text-[12px] flex items-center">
+                                <i data-lucide="newspaper" class="w-4 h-4 mr-1.5 text-emerald-400"></i>
+                                칼럼: 지구를 구하는 열망이 경제의 맥박을 멈출 때
+                            </p>
+                            <p class="text-gray-400">
+                                인류는 현재 가치관 추천 알고리즘의 무시무시한 협곡에 빠져 있습니다. 당신이 읽어온 환경 재앙 보고서들은 당장 자본주의를 폐쇄하지 않으면 인류가 내일 멸종할 것처럼 공포를 조장합니다. 이에 동조해 누른 좋아요 데이터는 당신의 피드에서 개발, 물류, 일자리 건설 소식을 완전히 밀어냈습니다.
+                            </p>
+                            <p class="text-gray-400">
+                                하지만 기억해야 합니다. 급진적인 에너지 강제 규제는 인류를 구하기도 전에 경제 취약 계층의 생활 단가를 폭증시켜 혹독한 민생 한파를 유도하는 역작용을 부릅니다. 둥지를 지키겠다고 모든 보금자리의 전등을 강제로 끊어낼 수는 없습니다. 우리가 논의해야 할 것은 경제 정지가 아닌, 탄소 경제를 신규 친환경 신제조업 산업 먹거리로 전환하는 융합적 속도 조율론입니다.
+                            </p>
+                            <p class="font-bold text-emerald-400 mt-3 flex items-center">
+                                <i data-lucide="check-square" class="w-3.5 h-3.5 mr-1 text-emerald-400"></i> 
+                                리터러시 행동 강제 수칙
+                            </p>
+                            <p class="text-gray-400">- 향후 2일 동안은 환경 오염 기사 클릭을 자제하고 원자력 효율성 뉴스나 반도체 투자 규제 완화 기사를 집중 교차 독서하세요.</p>
+                        </div>
+                    `;
+                } else if (ratioA > 55 && ratioA < 75) {
+                    // 2. 완만한 환경 편향 상태
+                    reportHTML = `
+                        <div class="space-y-2 overflow-y-auto max-h-[35vh] leading-relaxed pr-1 text-gray-300 text-[11px]">
+                            <p class="font-extrabold text-teal-400 text-[12px] flex items-center">
+                                <i data-lucide="newspaper" class="w-4 h-4 mr-1.5 text-teal-400"></i>
+                                칼럼: 지속 가능한 도약을 위한 친환경 완급조절의 예술
+                            </p>
+                            <p class="text-gray-400">
+                                환경적 보호 가치를 중시하는 당신의 신중한 기사 소비 태도는 훌륭한 시민 의식을 증명합니다. 그러나 추천 가중치 제곱 계산으로 인해 피드 내에서 환경 위기 비판 기사의 노출 빈도가 조금씩 높아지며 균형적 사고의 공간이 점차 침식당하기 시작했습니다.
+                            </p>
+                            <p class="text-gray-400">
+                                실질적인 기후 복원 행동에 필수적인 예산은 오직 산업 활성화의 세수와 첨단 기술 연구비 투자 재원에서 나옵니다. 보존을 향한 완급조절이 배제된 일방적 제재는 새로운 혁신 기술을 탄생시킬 기업의 동력을 죽일 수 있습니다. 규제를 혁신의 기회로 삼는 영리한 조율안을 파악하는 것이 필요한 시점입니다.
+                            </p>
+                            <p class="font-bold text-teal-400 mt-3 flex items-center">
+                                <i data-lucide="check-square" class="w-3.5 h-3.5 mr-1 text-teal-400"></i> 
+                                리터러시 행동 권고
+                            </p>
+                            <p class="text-gray-400">- 개발 구역 해제가 부른 일자리 창출 통계 기사나 첨단 에너지 학회의 공학적 수치 보고서를 의도적으로 추가 탐색하세요.</p>
+                        </div>
+                    `;
+                } else if (ratioA >= 45 && ratioA <= 55) {
+                    // 3. 완벽한 황금비 조율 상태
+                    reportHTML = `
+                        <div class="space-y-2 overflow-y-auto max-h-[35vh] leading-relaxed pr-1 text-gray-300 text-[11px]">
+                            <p class="font-extrabold text-blue-400 text-[12px] flex items-center">
+                                <i data-lucide="newspaper" class="w-4 h-4 mr-1.5 text-blue-400"></i>
+                                칼럼: 개발의 날개와 지구라는 보금자리의 위대한 균형선
+                            </p>
+                            <p class="text-gray-400">
+                                축하합니다! 당신은 양측 극단 프레임에 함몰되지 않고 지속적이고 고도로 훈련된 비판적 크로스 검증을 성공적으로 달성했습니다. 당신의 누적 피드 흐름은 보존이라는 의무와 성장이라는 현실을 대등하고 거시적인 구도로 바라보고 있습니다.
+                            </p>
+                            <p class="text-gray-400">
+                                인류는 문명을 설계하는 개발의 추진력이 필요하며, 동시에 그 문명을 유지할 생태적 보금자리를 수호해야 합니다. 이는 제로섬 싸움이 아닌, 조화의 톱니바퀴입니다. 이 아름답고 건강한 정보 균형 상태를 유지하여 필터 버블의 침공을 안전하게 방어해 내시기 바랍니다.
+                            </p>
+                            <p class="font-bold text-blue-400 mt-3 flex items-center">
+                                <i data-lucide="check-square" class="w-3.5 h-3.5 mr-1 text-blue-400"></i> 
+                                리터러시 행동 유지
+                            </p>
+                            <p class="text-gray-400">- 현재처럼 기사를 마주할 때마다 양측의 대치적 실익 수치와 보이지 않는 잠재 위험을 상호 연계 검증하는 태도를 고수하십시오.</p>
+                        </div>
+                    `;
+                } else if (ratioB > 55 && ratioB < 75) {
+                    // 4. 완만한 개발 편향 상태
+                    reportHTML = `
+                        <div class="space-y-2 overflow-y-auto max-h-[35vh] leading-relaxed pr-1 text-gray-300 text-[11px]">
+                            <p class="font-extrabold text-indigo-400 text-[12px] flex items-center">
+                                <i data-lucide="newspaper" class="w-4 h-4 mr-1.5 text-indigo-400"></i>
+                                칼럼: 일자리 지표와 눈에 보이지 않는 지구의 공공재 비용
+                            </p>
+                            <p class="text-gray-400">
+                                단기 경제 개발과 첨단 일자리 증대 기사에 주목하는 당신의 합리적 균형감은 일리가 있습니다. 그러나 추천 엔진의 은밀한 알고리즘은 당신을 일방적인 규제 폐지 정당성 논리에 밀어 넣어 타 진영의 엄격한 기후 대안 리포트를 가리기 시작했습니다.
+                            </p>
+                            <p class="text-gray-400">
+                                기업들이 개발 가치 창출을 위해 파괴하는 도심 숲과 생태 공간이 제공해 주는 홍수 조절, 대기 정화라는 무형의 환경적 혜택은 공짜가 아닙니다. 그것이 파괴된 후 국가가 세금으로 감당해야 할 인프라 보수 예산 손실은 상상을 초래합니다. 성장 뒤에 가려진 장기 비용을 함께 독서해야 합니다.
+                            </p>
+                            <p class="font-bold text-indigo-400 mt-3 flex items-center">
+                                <i data-lucide="check-square" class="w-3.5 h-3.5 mr-1 text-indigo-400"></i> 
+                                리터러시 행동 권고
+                            </p>
+                            <p class="text-gray-400">- 유럽의 대형 그린 기업들이 탄소 제로를 도모하는 방식이나 그린워싱 심층 고발 뉴스를 의도적으로 추가 검토해 보세요.</p>
+                        </div>
+                    `;
+                } else {
+                    // 5. 극단적 개발 편향 상태
+                    reportHTML = `
+                        <div class="space-y-2 overflow-y-auto max-h-[35vh] leading-relaxed pr-1 text-gray-300 text-[11px]">
+                            <p class="font-extrabold text-rose-400 text-[12px] flex items-center">
+                                <i data-lucide="newspaper" class="w-4 h-4 mr-1.5 text-rose-400"></i>
+                                칼럼: 장미빛 첨단 단지 건설 뒤에 지구 생태계가 청구할 고지서
+                            </p>
+                            <p class="text-gray-400">
+                                추천 알고리즘의 강력한 에코 체임버가 당신의 눈을 일방적 경제 만능주의 정서로 가려 가두어 두었습니다. 피드에 가득 찬 '규제 완화', '원전 신축', '개발 효과' 문장들은 단기적 이윤 극대화 논리 외에 지구라는 유일한 실존 영토의 한계를 전면 외면하도록 독자를 훈육하고 있습니다.
+                            </p>
+                            <p class="text-gray-400">
+                                기후 위기는 막연한 도덕적 잔소리가 아닌 기업의 장기적 생존을 위협하는 거대한 국경 탄소세와 글로벌 패널티라는 엄중한 부메랑으로 도래해 있습니다. 둥지를 파괴하여 당장 장작으로 쓰는 무리한 문명은 결코 장수할 수 없습니다. 생태 수호 비용과 지속성을 성장의 선결 요건으로 삼는 융합 지성이 요구됩니다.
+                            </p>
+                            <p class="font-bold text-rose-400 mt-3 flex items-center">
+                                <i data-lucide="check-square" class="w-3.5 h-3.5 mr-1 text-rose-400"></i> 
+                                리터러시 행동 강제 수칙
+                            </p>
+                            <p class="text-gray-400">- 즉시 우측 하단의 [알고리즘 붕괴] 버튼을 눌러 피드를 강제 믹스하고, 환경 연대의 즉각적 플라스틱 규제 촉구 기사와 그린워싱 규제 사설을 엄격히 숙독하십시오.</p>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = `
+                    <div class="bg-gradient-to-br from-emerald-950/20 to-blue-950/20 p-4 rounded-xl border border-emerald-500/30 relative">
+                        <span class="absolute top-2.5 right-2.5 text-[8px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded border border-emerald-400/20 font-bold flex items-center gap-1">
+                            <span class="w-1 h-1 rounded-full bg-emerald-400 animate-pulse"></span> 로컬 연산 완료
+                        </span>
+                        ${reportHTML}
+                        <button onclick="resetSimulator()" class="w-full mt-3 bg-gray-800/80 hover:bg-gray-800 hover:text-white text-gray-300 font-bold py-2 rounded-lg text-[10px] transition border border-gray-700">
+                            리포트 확인 완료 후 시뮬레이션 초기화
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+            }, 600);
         }
 
-        // (6) 시뮬레이션 상태 완벽한 초기화
+        function closeAIModal() {
+            document.getElementById('ai-modal').classList.add('opacity-0', 'pointer-events-none');
+        }
+
         function resetSimulator() {
-            likesA = 0;
-            likesB = 0;
-            exposureHistory = [];
-            bubbleWarningTriggered = false;
-            bubbleBurstedMode = false;
-            
-            feedContainer.innerHTML = '';
+            scoreA = 0.0;
+            scoreB = 0.0;
+            totalActions = 0;
+            exposureStream = [];
+            isBursted = false;
+            cardStates = {}; // 카드 상태 초기화
+
+            const feed = document.getElementById('feed-container');
+            if (feed) {
+                feed.innerHTML = '';
+            }
             closeWarning();
-            
-            // 초기 기본 데이터 4개 적당량 선분배 배치 (기초 분산)
-            loadMorePosts(4);
-            updateDashboardUI();
+
+            // AI 디톡스 버튼 원상 복구
+            const detoxBox = document.getElementById('ai-detox-placeholder');
+            if (detoxBox) {
+                detoxBox.innerHTML = `
+                    <button id="ai-detox-btn" onclick="generateDetoxReport()" class="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-500 to-blue-500 hover:opacity-90 text-white font-bold text-xs py-3 px-4 rounded-xl border border-emerald-400/20 transition-all duration-300 shadow-md shadow-emerald-500/10">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>✨ 맞춤형 리밸런싱 사설 발급받기</span>
+                    </button>
+                `;
+            }
+
+            document.getElementById('stream-lock-layer').style.display = 'block';
+            document.getElementById('stream-actual-layer').classList.add('hidden');
+
+            loadFeeds(5);
+            syncSimulationState();
         }
 
-        // === 6. 무한 스크롤(Infinite Scroll) 최적화 바인딩 ===
-        feedContainer.addEventListener('scroll', () => {
-            // 사용자가 타임라인 스크롤을 맨 아래로 내릴 경우 자동으로 새 포스트를 추가로 불러옵니다.
-            if (feedContainer.scrollTop + feedContainer.clientHeight >= feedContainer.scrollHeight - 5) {
-                loadMorePosts(2);
-            }
-        });
-
-        // 웹브라우저 초기 기동 로드 완료 시
-        window.onload = function() {
-            // 1) 초기 실행 시 가상 피드 채우기
-            loadMorePosts(5);
-            // 2) 분석기 대시보드 리셋 및 갱신
-            updateDashboardUI();
+        // 무한 스크롤 구현 (feedContainer 전역 상수를 안전하게 재사용)
+        if (feedContainer) {
+            feedContainer.addEventListener('scroll', () => {
+                if (feedContainer.scrollTop + feedContainer.clientHeight >= feedContainer.scrollHeight - 10) {
+                    loadFeeds(2);
+                }
+            });
         }
     </script>
 </body>
